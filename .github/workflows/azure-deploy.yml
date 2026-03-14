@@ -23,13 +23,13 @@ jobs:
           fetch-depth: 0        # full history for SonarCloud / tagging
 
       # ── 2. Node.js setup ─────────────────────────────────────────────────
-      # Pinned to Node 18 LTS (same as local dev / SonarCloud workflow).
+      # Node 20 LTS — matches Azure Web App recommended runtime.
       # Using the built-in npm cache avoids re-downloading packages on
       # every run and removes any stale node_modules permissions issue.
-      - name: Set up Node.js 18
+      - name: Set up Node.js 20
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '20'
           cache: 'npm'          # caches ~/.npm, NOT node_modules
 
       # ── 3. Install dependencies ───────────────────────────────────────────
@@ -48,6 +48,14 @@ jobs:
         env:
           CI: false             # warnings stay warnings, not errors
           GENERATE_SOURCEMAP: false   # smaller bundle, hides source in prod
+
+      # ── 5. Test ───────────────────────────────────────────────────────────
+      # --watchAll=false  → single run, no interactive watcher (required in CI)
+      # --passWithNoTests → exit 0 even when no test files exist yet
+      - name: Run tests
+        run: npm run test:ci
+        env:
+          CI: false
 
       # ── 5. Deploy ─────────────────────────────────────────────────────────
       # Uses the official Azure Static Web Apps deploy action.
