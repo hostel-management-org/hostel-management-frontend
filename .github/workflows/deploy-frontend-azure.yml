@@ -9,11 +9,12 @@ on:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+
     steps:
       # 1️⃣ Checkout repo
       - uses: actions/checkout@v4
 
-      # 2️⃣ Setup Node.js
+      # 2️⃣ Setup Node.js 20
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
@@ -25,15 +26,14 @@ jobs:
       # 4️⃣ Build CRA app
       - run: npm run build
 
-      # 5️⃣ Run tests safely
+      # 5️⃣ Run CI-safe tests
       - run: npm run test:ci
-        continue-on-error: true
 
       # 6️⃣ Deploy to Azure Web App using publish profile
       - uses: azure/webapps-deploy@v3
         with:
-          app-name: 'hostel-management-frontend'      # Your Azure Web App name
+          app-name: 'hostel-management-frontend'
           slot-name: 'Production'
-          package: 'build'                             # CRA build folder
+          package: './build'
         env:
           AZURE_WEBAPP_PUBLISH_PROFILE: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
