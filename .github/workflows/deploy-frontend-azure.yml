@@ -13,7 +13,7 @@ jobs:
       # 1️⃣ Checkout repo
       - uses: actions/checkout@v4
 
-      # 2️⃣ Setup Node.js 20
+      # 2️⃣ Setup Node.js
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
@@ -22,18 +22,18 @@ jobs:
       # 3️⃣ Install dependencies
       - run: npm install
 
-      # 4️⃣ Build React App
+      # 4️⃣ Build CRA app
       - run: npm run build
 
-      # 5️⃣ Run CI-safe tests (optional, won’t fail workflow)
+      # 5️⃣ Run tests safely
       - run: npm run test:ci
         continue-on-error: true
 
-      # 6️⃣ Deploy using **publish profile**
+      # 6️⃣ Deploy to Azure Web App using publish profile
       - uses: azure/webapps-deploy@v3
         with:
-          app-name: 'hostel-management-frontend'   # Your Azure Web App name
+          app-name: 'hostel-management-frontend'      # Your Azure Web App name
           slot-name: 'Production'
-          package: 'build'                          # CRA build folder
+          package: 'build'                             # CRA build folder
         env:
           AZURE_WEBAPP_PUBLISH_PROFILE: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
