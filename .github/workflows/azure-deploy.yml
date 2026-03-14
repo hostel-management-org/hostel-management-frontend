@@ -33,12 +33,12 @@ jobs:
           cache: 'npm'          # caches ~/.npm, NOT node_modules
 
       # ── 3. Install dependencies ───────────────────────────────────────────
-      # npm ci:
-      #   • Always does a clean install from package-lock.json
-      #   • Sets correct execute bits on node_modules/.bin/* on Linux
-      #   • Is faster and more reproducible than npm install in CI
+      # npm install is used instead of npm ci because the package-lock.json
+      # is generated on Windows and may not resolve all packages identically
+      # to the Linux runner (e.g. yaml@2.8.2).  npm install regenerates the
+      # lock file as needed and still sets correct execute bits on .bin/*.
       - name: Install dependencies
-        run: npm ci
+        run: npm install
 
       # ── 4. Build ─────────────────────────────────────────────────────────
       # CI=false prevents ESLint warnings from being treated as errors
