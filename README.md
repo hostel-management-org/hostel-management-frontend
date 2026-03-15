@@ -1,7 +1,7 @@
 # Hostel Management System – Frontend
 
 This is the **React frontend** for the Hostel Management System.  
-It allows students to view and manage hostel allocations, rooms, and other details.
+It allows students to view and manage hostel allocations, rooms, and other details. //project 
 
 ---
 
