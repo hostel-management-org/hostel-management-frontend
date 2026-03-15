@@ -13,7 +13,6 @@ export {
   roomAPI,
   allocationAPI,
   apiRequest,
-  AZURE_API_BASE_URL,
-  RENDER_API_BASE_URL,
+  API_BASE_URL,
   default,
 } from '../api/apiService';
