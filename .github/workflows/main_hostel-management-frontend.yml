@@ -1,0 +1,63 @@
+name: Build and deploy Node.js app to Azure Web App - hostel-management-frontend
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20.x'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build React app
+        run: npm run build
+
+      - name: Run CI tests
+        run: CI=true npm test -- --passWithNoTests
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: node-app
+          path: .
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: node-app
+
+      - name: Login to Azure
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_95E7C9C7F9D74FF4B3B43C48C1762017 }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_F244A7F620874A359C43C6045217BF70 }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_15BF220E894C4FCBA3CB0B27FD0B4497 }}
+
+      - name: Deploy to Azure Web App
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: 'hostel-management-frontend'
+          slot-name: 'Production'
+          package: .
