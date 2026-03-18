@@ -83,7 +83,7 @@ function AllocationList() {
     }
   };
 
-const handleDelete = async (id) => {
+  const handleDelete = async (id) => {
   const confirmDelete = window.confirm('Are you sure you want to delete this allocation?');
 
   if (!confirmDelete) return;
