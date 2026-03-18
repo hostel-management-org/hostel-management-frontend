@@ -83,18 +83,30 @@ function AllocationList() {
     }
   };
 
-  const handleDelete = async (id) => {
-    if (window.confirm('Are you sure you want to delete this allocation?')) {
-      try {
-        await allocationAPI.delete(id);
-        alert('Allocation deleted successfully!');
-        fetchAllocations();
-        fetchRooms();
-      } catch (error) {
-        alert('Error deleting allocation: ' + error.message);
-      }
-    }
-  };
+const handleDelete = async (id) => {
+  const confirmDelete = window.confirm('Are you sure you want to delete this allocation?');
+
+  if (!confirmDelete) return;
+
+  // Ask for password
+  const password = window.prompt('Enter admin password to delete:');
+
+  // Check password
+  if (password !== '2006') {
+    alert('Incorrect password! Deletion not allowed.');
+    return;
+  }
+
+  try {
+    await allocationAPI.delete(id);
+    alert('Allocation deleted successfully!');
+    fetchAllocations();
+    fetchRooms();
+  } catch (error) {
+    alert('Error deleting allocation: ' + error.message);
+  }
+};
+
 
   const resetForm = () => {
     setFormData({
